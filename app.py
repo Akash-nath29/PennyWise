@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
-from datetime import datetime
+from datetime import datetime, date
 from os import environ as env
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from collections import defaultdict
 
 load_dotenv()
 
@@ -45,23 +46,12 @@ class Expenses(db.Model):
         return f'Expense {self.id}'
 
 
-class History(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.now())
-
-    def __repr__(self):
-        return f'History {self.id}'
-
-
 with app.app_context():
     db.create_all()
 
 admin = Admin(app)
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Expenses, db.session))
-admin.add_view(ModelView(History, db.session))
 
 @app.route('/')
 def index():
@@ -108,14 +98,46 @@ def logout():
     session.pop('user_id', None)
     return redirect('/')
 
+import calendar
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect('/login')
-    total_expense = db.session.query(db.func.sum(Expenses.amount)).filter_by(user_id=session['user_id']).scalar()
+
+    current_year = date.today().year
+    current_month = date.today().month
+    num_days = calendar.monthrange(current_year, current_month)[1]
+
+    # Initialize lists to store expenses for each day
+    daily_expenses = [0] * num_days
+
+    # Query expenses recorded for each day within the current month
+    for day in range(1, num_days + 1):
+        daily_expense = db.session.query(db.func.sum(Expenses.amount)).\
+            filter(db.extract('day', Expenses.date) == day).\
+            filter(db.extract('month', Expenses.date) == current_month).\
+            filter(db.extract('year', Expenses.date) == current_year).\
+            filter_by(user_id=session['user_id']).scalar()
+        daily_expenses[day - 1] = daily_expense if daily_expense else 0
+
+    # Prepare labels for the x-axis (days of the month)
+    labels = [str(day) for day in range(1, num_days + 1)]
+
+    total_expense_month = db.session.query(db.func.sum(Expenses.amount)).\
+        filter(db.extract('month', Expenses.date) == current_month).\
+        filter(db.extract('year', Expenses.date) == current_year).\
+        filter_by(user_id=session['user_id']).scalar()
+
+    total_expense_all = db.session.query(db.func.sum(Expenses.amount)).\
+        filter_by(user_id=session['user_id']).scalar()
     total_people = db.session.query(db.func.sum(Expenses.split_with)).filter_by(user_id=session['user_id']).scalar()
     curr_user = User.query.filter_by(id=session['user_id']).first()
-    return render_template('dashboard.html', logged_in=True, total_expense = total_expense, total_people = total_people, curr_user=curr_user)
+
+    expenses = Expenses.query.filter_by(user_id=session['user_id']).order_by(desc(Expenses.id)).all()
+
+    return render_template('dashboard.html', logged_in=True, total_expense_month=total_expense_month, total_expense_all=total_expense_all, total_people=total_people, curr_user=curr_user, expenses=expenses, labels=labels, daily_expenses=daily_expenses)
+
 
 @app.route('/expenses')
 def expenses():
@@ -135,10 +157,6 @@ def add_expense():
         per_person = float(amount) / float(split_with)
         expense = Expenses(title=title, amount=amount, user_id=session['user_id'], split_with=split_with, per_person=per_person)
         db.session.add(expense)
-        db.session.commit()
-        expense = Expenses.query.filter_by(user_id=session['user_id']).filter_by(title=title).first()
-        history = History(user_id=session['user_id'], expense_id=expense.id, date=datetime.now())
-        db.session.add(history)
         db.session.commit()
         return redirect('/expenses')
     return render_template('create_expense.html', logged_in=True)

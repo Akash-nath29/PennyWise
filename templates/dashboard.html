@@ -1,21 +1,70 @@
 {% extends 'base.html' %}
 {% block body %}
 <div class="dashboard">
-    <h1>Dashboard</h1>
-    <div class="content">
-        <div class="leftColumn">
-            <h2>Hello, {{curr_user.username}}</h2>
+    <h1>Hello {{curr_user.username}}</h1>
+    <div class="data">
+        <div class="col">
+            <h2>Total Expenses</h2>
+            <p>Total Monthly Expense: {{total_expense_month}}</p>
+            <p>Total Expense (Till Now): {{total_expense_all}}</p>
+            <p>Total People: {{total_people}}</p>
+            <canvas id="expenseLineChart" width="500" height="400" style="max-height: 400px;"></canvas>
         </div>
-        <div class="rightColumn">
-            <div class="dashboard-item">
-                <h3>Total expenses</h3>
-                <p>{{total_expense}}</p>
-            </div>
-            <div class="dashboard-item">
-                <h3>Total people</h3>
-                <p>{{total_people}}</p>
-            </div>
+        <div class="col">
+            <h2>Recent Expenses</h2>
+            <table>
+                <tr>
+                    <th>Amount</th>
+                    <th>Spent On</th>
+                    <th>Date</th>
+                </tr>
+                {% for expense in expenses %}
+                <tr>
+
+                    <td>{{expense.amount}}</td>
+                    <td>{{expense.title}}</td>
+                    <td>{{expense.date}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <!-- Add this to your HTML template -->
         </div>
     </div>
 </div>
+<!-- Add this to your HTML template -->
+<script>
+    var ctx = document.getElementById('expenseLineChart').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels| tojson }},
+    datasets: [{
+        label: 'Expenses',
+        data: {{ daily_expenses| tojson }},
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+            }]
+        },
+    options: {
+        responsive: true,
+            maintainAspectRatio: false,
+                scales: {
+            x: {
+                title: {
+                    display: true,
+                        text: 'Day of the Month'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                        text: 'Expense Amount'
+                }
+            }
+        }
+    }
+    });
+</script>
+
 {% endblock %}
