@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if logged_in %}
+<center>
+    <h1>Logged In!</h1>
+</center>
+{% else %}
+<div class="hero">
+    <div class="left-col">
+        <img src="{{url_for('static', filename='assets/hero.svg')}}" alt="Hero Icon" width="300" height="300">
+    </div>
+    <div class="right-col">
+        <h1>Pennywise</h1>
+        <p>Manage your <span style="color: red; font-size: 20px; font-weight: 600;">Expenses</span> with <span style="color: green; font-size: 20px; font-weight: 600;">Efficiency</span></p>
+
+        <div class="hero-btns">
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

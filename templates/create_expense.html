@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="create-expense">
+    <h1>Create a new expense</h1>
+    <form action="/add_expense" method="POST">
+        <label for="amount">Title</label>
+        <input type="text" name="title" id="title" required>
+        <label for="amount">Amount</label>
+        <input type="number" name="amount" id="amount" required>
+        <label for="split">Split with</label>
+        <input type="number" name="split" id="split" required>
+        <button type="submit">Add</button>
+    </form>
+</div>
+{% endblock %}

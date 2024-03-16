@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="expenses">
+    <span class="header">
+        <h1>Your expenses</h1>
+        <a href="/add_expense">Create New Expense</a>
+    </span>
+    {% if expenses %}
+    {% for expense in expenses %}
+    <div class="expense">
+        <h3>{{expense.title}}</h3>
+        <p>Amount: {{expense.amount}}</p>
+        <p>Split with: {{expense.split_with}} people</p>
+        <p>Amount per person: {{expense.per_person}}</p>
+        <p>
+            <a href="/delete_expense/{{expense.id}}">Delete</a>
+            <a href="/edit_expense/{{expense.id}}">Edit</a>
+        </p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No expenses yet</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="dashboard">
+    <h1>Dashboard</h1>
+    <div class="content">
+        <div class="leftColumn">
+            <h2>Hello, {{curr_user.username}}</h2>
+        </div>
+        <div class="rightColumn">
+            <div class="dashboard-item">
+                <h3>Total expenses</h3>
+                <p>{{total_expense}}</p>
+            </div>
+            <div class="dashboard-item">
+                <h3>Total people</h3>
+                <p>{{total_people}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
