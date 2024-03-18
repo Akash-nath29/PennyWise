@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="profile">
+    <h1>{{ curr_user.username }}</h1>
+    <p>{{ curr_user.email }}</p>
+    <p>{{ curr_user.created_at }}</p>
+    <p>{{ curr_user.updated_at }}</p>
+    <form method="POST">
+        <input type="text" name="username" placeholder="Username" value="{{ curr_user.username }}">
+        <input type="email" name="email" placeholder="Email" value="{{ curr_user.email }}">
+        <input type="password" name="password" placeholder="Password">
+        <input type="password" name="confirm_password" placeholder="Confirm Password">
+        <button type="submit">Update</button>
+    </form>
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %}
+
+    {% if success %}
+    <p>{{ success }}</p>
+    {% endif %}
+
+    {% if delete_success %}
+    <p>{{ delete_success }}</p>
+    {% endif %}
+
+    <form method="POST" action="/delete">
+        <button type="submit" id="delete-account">Delete Account</button>
+    </form>
+</div>
+{% endblock %}

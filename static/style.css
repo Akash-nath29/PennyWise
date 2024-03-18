@@ -586,11 +586,12 @@ footer {
 
 .data {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     width: 100%;
     padding: 1rem;
     border-bottom: 1px solid #507c5c;
+    margin-top: 2vh;
 }
 
 .data .col {
@@ -629,3 +630,234 @@ footer {
 .col canvas {
     margin: 5vh 0;
 }
+
+.col h2 {
+    font-size: 1.5rem;
+    color: #2b5637;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    min-height: 100vh;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* Optional subtle shadow */
+}
+
+.profile h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #507c5c;
+}
+
+.profile form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 350px;
+    /* Slightly wider than login form */
+}
+
+.profile form label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #507c5c;
+}
+
+.profile form input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #6a6a6a;
+    border-radius: 3px;
+    font-size: 1rem;
+}
+
+.profile form button {
+    background-color: #507c5c;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.profile form button:hover {
+    background-color: #426953;
+}
+
+/* Responsive */
+@media (max-width: 1300px) {
+    .navbar {
+        flex-direction: column;
+        padding: 2rem 1rem;
+    }
+
+    .navbar .navLinks {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .navbar .brand {
+        margin-bottom: 2rem;
+    }
+
+    .hero {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .left-col,
+    .right-col {
+        width: 100%;
+    }
+
+    .hero-btns {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .footer .col {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .footer .icons {
+        margin-top: 2rem;
+    }
+
+    .footer .icons a {
+        font-size: 2rem;
+    }
+
+    .dashboard .content {
+        margin-top: 2vh;
+    }
+
+    .data .col {
+        gap: 1rem;
+    }
+
+    .col canvas {
+        margin: 2vh 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .navbar .navLinks .link a {
+        font-size: 1rem;
+    }
+
+    .navbar .brand a {
+        font-size: 1.2rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .hero-btns a {
+        padding: 0.5rem 1rem;
+    }
+
+    .footer .col {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .footer .icons {
+        margin-top: 2rem;
+    }
+
+    .footer .icons a {
+        font-size: 1.5rem;
+    }
+
+    .dashboard .content {
+        margin-top: 2vh;
+    }
+
+    .data .col {
+        gap: 1rem;
+    }
+
+    .col canvas {
+        margin: 2vh 0;
+    }
+}
+
+#delete-account {
+    background-color: red;
+}
+
+#delete-account:hover {
+    background-color: #a70000;
+}
+
+.edit-expense {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Optional subtle shadow */
+}
+
+.edit-expense h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #507c5c;
+}
+
+.edit-expense form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 350px;
+    /* Slightly wider than login form */
+}
+
+.edit-expense form label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #507c5c;
+}
+
+.edit-expense form input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #6a6a6a;
+    border-radius: 3px;
+    font-size: 1rem;
+}
+
+.edit-expense form button {
+    background-color: #507c5c;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.edit-expense form button:hover {
+    background-color: #426953;
+}
+

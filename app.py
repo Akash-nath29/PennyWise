@@ -76,6 +76,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if 'user_id' not in session:
+        return redirect('/login')
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
@@ -95,6 +97,8 @@ def register():
 
 @app.route('/logout')
 def logout():
+    if 'user_id' not in session:
+        return redirect('/login')
     session.pop('user_id', None)
     return redirect('/')
 
@@ -164,10 +168,33 @@ def add_expense():
 
 @app.route('/delete_expense/<int:id>')
 def delete_expense(id):
+    if 'user_id' not in session:
+        return redirect('/login')
     expense = Expenses.filter_by(id).first()
     db.session.remove(expense)
     db.session.commit()
     return redirect('/expenses')
+
+@app.route('/edit_expense/<int:id>')
+def edit_expense(id):
+    if 'user_id' not in session:
+        return redirect('/login')
+    expense = Expenses.query.filter_by(id=id).first()
+    return render_template('edit_expense.html', expense=expense, logged_in=True)
+
+@app.route('/update_expense/<int:id>', methods=['GET', 'POST'])
+def update_expense(id):
+    if 'user_id' not in session:
+        return redirect('/login')
+    expense = Expenses.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        expense.title = request.form['title']
+        expense.amount = request.form['amount']
+        expense.split_with = request.form['split']
+        expense.per_person = float(expense.amount) / float(expense.split_with)
+        db.session.commit()
+        return redirect('/expenses')
+    return render_template('edit_expense.html', expense=expense, logged_in=True)
 
 # @app.route('/history')
 # def history():
@@ -183,6 +210,13 @@ def delete_expense(id):
 #         db.session.commit()
 #         return redirect('/history')
 #     return render_template('history.html', logged_in=True)
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect('/login')
+    curr_user = User.query.filter_by(id=session['user_id']).first()
+    return render_template('profile.html', curr_user=curr_user, logged_in=True)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
